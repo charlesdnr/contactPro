@@ -69,14 +69,16 @@ class AddContactActivity : AppCompatActivity() {
     private fun validateFields(): Boolean {
         val nom = etNom.text.toString().trim()
         val prenom = etPrenom.text.toString().trim()
-        val societe = etSociete.text.toString().trim()
-        val adresse = etAdresse.text.toString().trim()
         val tel = etTel.text.toString().trim()
         val email = etEmail.text.toString().trim()
         
-        if (nom.isEmpty() || prenom.isEmpty() || societe.isEmpty() || 
-            adresse.isEmpty() || tel.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
+        if (nom.isEmpty() && prenom.isEmpty()) {
+            Toast.makeText(this, "Veuillez remplir au moins le nom ou le prénom", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        
+        if (tel.isEmpty() && email.isEmpty()) {
+            Toast.makeText(this, "Veuillez remplir au moins le téléphone ou l'email", Toast.LENGTH_SHORT).show()
             return false
         }
         
@@ -85,12 +87,12 @@ class AddContactActivity : AppCompatActivity() {
     
     private fun saveContact() {
         val contact = Contact(
-            nom = etNom.text.toString().trim(),
-            prenom = etPrenom.text.toString().trim(),
-            societe = etSociete.text.toString().trim(),
-            adresse = etAdresse.text.toString().trim(),
-            tel = etTel.text.toString().trim(),
-            email = etEmail.text.toString().trim(),
+            nom = etNom.text.toString().trim().ifEmpty { "Non spécifié" },
+            prenom = etPrenom.text.toString().trim().ifEmpty { "Non spécifié" },
+            societe = etSociete.text.toString().trim().ifEmpty { "Non spécifié" },
+            adresse = etAdresse.text.toString().trim().ifEmpty { "Non spécifié" },
+            tel = etTel.text.toString().trim().ifEmpty { "Non spécifié" },
+            email = etEmail.text.toString().trim().ifEmpty { "Non spécifié" },
             secteur = spinnerSecteur.selectedItem.toString(),
             favori = 0
         )

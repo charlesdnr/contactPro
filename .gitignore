@@ -14,6 +14,7 @@
 .cxx
 local.properties
 .claude/**
+.claude
 CLAUDE.md
 Application Contact Pro-1.pdf
-.vscode
+.vscode/**
