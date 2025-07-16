@@ -13,6 +13,7 @@ class ContactAdapter(
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvInitials: TextView = itemView.findViewById(R.id.tvInitials)
         val tvNomPrenom: TextView = itemView.findViewById(R.id.tvNomPrenom)
         val tvSociete: TextView = itemView.findViewById(R.id.tvSociete)
         val tvSecteur: TextView = itemView.findViewById(R.id.tvSecteur)
@@ -28,23 +29,40 @@ class ContactAdapter(
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        val contact = contacts[position]
-        
-        holder.tvNomPrenom.text = "${contact.nom} ${contact.prenom}"
-        holder.tvSociete.text = contact.societe
-        holder.tvSecteur.text = contact.secteur
-        holder.tvTel.text = contact.tel
-        holder.tvEmail.text = contact.email
-        
-        // Set favorite icon
-        if (contact.favori == 1) {
-            holder.ivFavorite.setImageResource(android.R.drawable.btn_star_big_on)
-        } else {
+        try {
+            val contact = contacts[position]
+            
+            // Set initials safely
+            val nom = contact.nom.takeIf { it != "Non spécifié" && it.isNotEmpty() } ?: ""
+            val prenom = contact.prenom.takeIf { it != "Non spécifié" && it.isNotEmpty() } ?: ""
+            val initials = "${nom.firstOrNull()?.uppercase() ?: ""}${prenom.firstOrNull()?.uppercase() ?: ""}"
+            holder.tvInitials.text = if (initials.isNotEmpty()) initials else "?"
+            
+            holder.tvNomPrenom.text = "${contact.nom} ${contact.prenom}"
+            holder.tvSociete.text = contact.societe.takeIf { it != "Non spécifié" && it.isNotEmpty() } ?: "Société non renseignée"
+            holder.tvSecteur.text = contact.secteur.takeIf { it.isNotEmpty() } ?: "Secteur non spécifié"
+            holder.tvTel.text = contact.tel.takeIf { it != "Non spécifié" && it.isNotEmpty() } ?: "N/A"
+            holder.tvEmail.text = contact.email.takeIf { it != "Non spécifié" && it.isNotEmpty() } ?: "N/A"
+            
+            // Set favorite icon
+            if (contact.favori == 1) {
+                holder.ivFavorite.setImageResource(android.R.drawable.btn_star_big_on)
+            } else {
+                holder.ivFavorite.setImageResource(android.R.drawable.btn_star_big_off)
+            }
+            
+            holder.itemView.setOnClickListener {
+                onContactClick(contact)
+            }
+        } catch (e: Exception) {
+            // Fallback values in case of any error
+            holder.tvInitials.text = "?"
+            holder.tvNomPrenom.text = "Contact invalide"
+            holder.tvSociete.text = "Erreur"
+            holder.tvSecteur.text = "Erreur"
+            holder.tvTel.text = "N/A"
+            holder.tvEmail.text = "N/A"
             holder.ivFavorite.setImageResource(android.R.drawable.btn_star_big_off)
-        }
-        
-        holder.itemView.setOnClickListener {
-            onContactClick(contact)
         }
     }
 

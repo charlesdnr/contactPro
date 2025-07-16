@@ -73,9 +73,7 @@ class UpdateContactActivity : AppCompatActivity() {
     private fun loadContact() {
         lifecycleScope.launch {
             contact = database.contactDao().getContactById(contactId)
-            runOnUiThread {
-                populateFields()
-            }
+            populateFields()
         }
     }
     
@@ -129,14 +127,10 @@ class UpdateContactActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     database.contactDao().update(updatedContact)
-                    runOnUiThread {
-                        Toast.makeText(this@UpdateContactActivity, "Contact mis à jour avec succès", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
+                    Toast.makeText(this@UpdateContactActivity, "Contact mis à jour avec succès", Toast.LENGTH_SHORT).show()
+                    finish()
                 } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this@UpdateContactActivity, "Erreur lors de la mise à jour du contact", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(this@UpdateContactActivity, "Erreur lors de la mise à jour du contact: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

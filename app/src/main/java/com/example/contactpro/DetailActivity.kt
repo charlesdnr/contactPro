@@ -69,9 +69,7 @@ class DetailActivity : AppCompatActivity() {
     private fun loadContact() {
         lifecycleScope.launch {
             contact = database.contactDao().getContactById(contactId)
-            runOnUiThread {
-                displayContact()
-            }
+            displayContact()
         }
     }
     
@@ -122,12 +120,10 @@ class DetailActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 database.contactDao().update(updatedContact)
                 this@DetailActivity.contact = updatedContact
-                runOnUiThread {
-                    updateFavoriteButton(newFavoriteStatus == 1)
-                    Toast.makeText(this@DetailActivity, 
-                        if (newFavoriteStatus == 1) "Ajouté aux favoris" else "Retiré des favoris", 
-                        Toast.LENGTH_SHORT).show()
-                }
+                updateFavoriteButton(newFavoriteStatus == 1)
+                Toast.makeText(this@DetailActivity, 
+                    if (newFavoriteStatus == 1) "Ajouté aux favoris" else "Retiré des favoris", 
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -197,10 +193,8 @@ class DetailActivity : AppCompatActivity() {
         contact?.let { contact ->
             lifecycleScope.launch {
                 database.contactDao().delete(contact)
-                runOnUiThread {
-                    Toast.makeText(this@DetailActivity, "Contact supprimé", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
+                Toast.makeText(this@DetailActivity, "Contact supprimé", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }

@@ -25,9 +25,6 @@ class AddContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
         
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Ajouter un contact"
-        
         database = ContactDatabase.getDatabase(this)
         
         initViews()
@@ -100,20 +97,12 @@ class AddContactActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 database.contactDao().insert(contact)
-                runOnUiThread {
-                    Toast.makeText(this@AddContactActivity, "Contact ajouté avec succès", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
+                Toast.makeText(this@AddContactActivity, "Contact ajouté avec succès", Toast.LENGTH_SHORT).show()
+                finish()
             } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@AddContactActivity, "Erreur lors de l'ajout du contact", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@AddContactActivity, "Erreur lors de l'ajout du contact: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
     
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
 }
