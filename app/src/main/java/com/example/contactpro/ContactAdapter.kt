@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ContactAdapter(
     private var contacts: List<Contact>,
-    private val onContactClick: (Contact) -> Unit
+    private val onContactClick: (Contact) -> Unit,
+    private val onFavoriteClick: (Contact) -> Unit
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -54,6 +55,10 @@ class ContactAdapter(
             holder.itemView.setOnClickListener {
                 onContactClick(contact)
             }
+            
+            holder.ivFavorite.setOnClickListener {
+                onFavoriteClick(contact)
+            }
         } catch (e: Exception) {
             // Fallback values in case of any error
             holder.tvInitials.text = "?"
@@ -71,5 +76,9 @@ class ContactAdapter(
     fun updateContacts(newContacts: List<Contact>) {
         contacts = newContacts
         notifyDataSetChanged()
+    }
+    
+    fun getContactAt(position: Int): Contact {
+        return contacts[position]
     }
 }

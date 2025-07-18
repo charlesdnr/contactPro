@@ -1,23 +1,25 @@
 package com.example.contactpro
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
 class AddContactActivity : AppCompatActivity() {
     
-    private lateinit var etNom: TextInputEditText
-    private lateinit var etPrenom: TextInputEditText
-    private lateinit var etSociete: TextInputEditText
-    private lateinit var etAdresse: TextInputEditText
-    private lateinit var etTel: TextInputEditText
-    private lateinit var etEmail: TextInputEditText
+    private lateinit var etNom: EditText
+    private lateinit var etPrenom: EditText
+    private lateinit var etSociete: EditText
+    private lateinit var etAdresse: EditText
+    private lateinit var etTel: EditText
+    private lateinit var etEmail: EditText
     private lateinit var spinnerSecteur: Spinner
     private lateinit var btnAjouter: Button
     private lateinit var btnAnnuler: Button
+    private lateinit var bottomNavigation: BottomNavigationView
     
     private lateinit var database: ContactDatabase
     
@@ -30,6 +32,7 @@ class AddContactActivity : AppCompatActivity() {
         initViews()
         setupSpinner()
         setupClickListeners()
+        setupBottomNavigation()
     }
     
     private fun initViews() {
@@ -42,6 +45,7 @@ class AddContactActivity : AppCompatActivity() {
         spinnerSecteur = findViewById(R.id.spinnerSecteur)
         btnAjouter = findViewById(R.id.btnAjouter)
         btnAnnuler = findViewById(R.id.btnAnnuler)
+        bottomNavigation = findViewById(R.id.bottomNavigation)
     }
     
     private fun setupSpinner() {
@@ -103,6 +107,34 @@ class AddContactActivity : AppCompatActivity() {
                 Toast.makeText(this@AddContactActivity, "Erreur lors de l'ajout du contact: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    
+    private fun setupBottomNavigation() {
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_contacts -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.nav_favorites -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra("show_favorites", true)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.nav_add -> {
+                    // Déjà dans la page d'ajout
+                    true
+                }
+                else -> false
+            }
+        }
+        
+        // Sélectionner l'item d'ajout
+        bottomNavigation.selectedItemId = R.id.nav_add
     }
     
 }
